@@ -9,10 +9,21 @@ import java.util.List;
  * @author Klaus Bayrhammer
  */
 public class StringCalculator {
+    private final String input;
+
     private String delimiter = "[,\n]";
     private String numbersWithDelimiters;
 
-    public int add(String input) {
+    public StringCalculator(String input) {
+        this.input = input;
+    }
+
+    public static int add(String input) {
+        StringCalculator calculator = new StringCalculator(input);
+        return calculator.add();
+    }
+
+    public int add() {
         if (isInputEmpty(input)) {
             return 0;
         }
@@ -51,13 +62,18 @@ public class StringCalculator {
             Integer valueAsInteger = Integer.parseInt(token);
             if (valueAsInteger < 0) {
                 negativeTokens.add(token);
+            } else if (isInValidRange(valueAsInteger)) {
+                result += valueAsInteger;
             }
-            result += valueAsInteger;
         }
         if (negativeTokens.size() > 0) {
             throw new IllegalArgumentException(String.format("negatives not allowed (%s)", StringUtils.join(negativeTokens, ",")));
         }
         return result;
+    }
+
+    private boolean isInValidRange(Integer valueAsInteger) {
+        return valueAsInteger < 1000;
     }
 
     private String[] splitInputByDelimiter(String input) {
