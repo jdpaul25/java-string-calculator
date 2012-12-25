@@ -21,8 +21,8 @@ public class StringCalculator {
         } else {
             numbersWithDelimiters = input;
         }
-        String[] inputSplittedByDelimitor = splitInputByDelimitor(numbersWithDelimiters);
-        return calculateSum(inputSplittedByDelimitor);
+        String[] inputSplittedByDelimiter = splitInputByDelimiter(numbersWithDelimiters);
+        return calculateSum(inputSplittedByDelimiter);
     }
 
     private void parseDelimiterAndFindLineWithNumbersAndDelimiters(String input) {
@@ -43,11 +43,11 @@ public class StringCalculator {
         return input.startsWith("//");
     }
 
-    private int calculateSum(String[] inputSplittedByDelimitor) {
+    private int calculateSum(String[] inputSplittedByDelimiter) {
         int result = 0;
         List<String> negativeTokens = new ArrayList<String>();
 
-        for (String token : inputSplittedByDelimitor) {
+        for (String token : inputSplittedByDelimiter) {
             Integer valueAsInteger = Integer.parseInt(token);
             if (valueAsInteger < 0) {
                 negativeTokens.add(token);
@@ -60,7 +60,7 @@ public class StringCalculator {
         return result;
     }
 
-    private String[] splitInputByDelimitor(String input) {
+    private String[] splitInputByDelimiter(String input) {
         return input.split(delimiter);
     }
 
