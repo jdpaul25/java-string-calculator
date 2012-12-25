@@ -9,80 +9,112 @@ import java.util.List;
  * @author Klaus Bayrhammer
  */
 public class StringCalculator {
-    private final String input;
-
-    private String delimiter = "[,\n]";
-    private String numbersWithDelimiters;
-
-    public StringCalculator(String input) {
-        this.input = input;
-    }
 
     public static int add(String input) {
-        StringCalculator calculator = new StringCalculator(input);
+        InnerStringCalculator calculator = new InnerStringCalculator(input);
         return calculator.add();
     }
 
-    public int add() {
-        if (isInputEmpty(input)) {
-            return 0;
+    static class InnerStringCalculator {
+        private final String input;
+
+        private String delimiter = "[,\n]";
+        private String numbersWithDelimiters;
+        private List<String> negativeTokens = new ArrayList<String>();
+
+        private InnerStringCalculator(String input) {
+            this.input = input;
         }
-        if (hasCustomDelimiter(input)) {
-            parseDelimiterAndFindLineWithNumbersAndDelimiters(input);
-        } else {
-            numbersWithDelimiters = input;
+
+        public int add() {
+            if (isInputEmpty()) {
+                return 0;
+            }
+            parseDelimiterAndFindLineWithNumbersAndDelimiters();
+            String[] inputSplittedByDelimiter = splitInputByDelimiter();
+            return calculateSum(inputSplittedByDelimiter);
         }
-        String[] inputSplittedByDelimiter = splitInputByDelimiter(numbersWithDelimiters);
-        return calculateSum(inputSplittedByDelimiter);
-    }
 
-    private void parseDelimiterAndFindLineWithNumbersAndDelimiters(String input) {
-        parseDelimiter(input);
-        findLineWithNumbersAndDelimiters(input);
-    }
+        private boolean isInputEmpty() {
+            return input.length() == 0;
+        }
 
-    private void findLineWithNumbersAndDelimiters(String input) {
-        int firstNewLine = input.indexOf("\n");
-        numbersWithDelimiters = input.substring(firstNewLine + 1);
-    }
-
-    private void parseDelimiter(String input) {
-        int startIndexDelimiter = input.indexOf("[") + 1;
-        int endIndexDelimiter = input.indexOf("]");
-        delimiter = input.substring(startIndexDelimiter, endIndexDelimiter);
-    }
-
-    private boolean hasCustomDelimiter(String input) {
-        return input.startsWith("//");
-    }
-
-    private int calculateSum(String[] inputSplittedByDelimiter) {
-        int result = 0;
-        List<String> negativeTokens = new ArrayList<String>();
-
-        for (String token : inputSplittedByDelimiter) {
-            Integer valueAsInteger = Integer.parseInt(token);
-            if (valueAsInteger < 0) {
-                negativeTokens.add(token);
-            } else if (isInValidRange(valueAsInteger)) {
-                result += valueAsInteger;
+        private void parseDelimiterAndFindLineWithNumbersAndDelimiters() {
+            if (hasCustomDelimiter()) {
+                parseDelimiter();
+                findLineWithNumbersAndDelimiters();
+            } else {
+                numbersWithDelimiters = input;
             }
         }
-        if (negativeTokens.size() > 0) {
-            throw new IllegalArgumentException(String.format("negatives not allowed (%s)", StringUtils.join(negativeTokens, ",")));
+
+        private boolean hasCustomDelimiter() {
+            return input.startsWith("//");
         }
-        return result;
-    }
 
-    private boolean isInValidRange(Integer valueAsInteger) {
-        return valueAsInteger < 1000;
-    }
 
-    private String[] splitInputByDelimiter(String input) {
-        return input.split(delimiter);
-    }
+        private void findLineWithNumbersAndDelimiters() {
+            int firstNewLine = input.indexOf("\n");
+            numbersWithDelimiters = input.substring(firstNewLine + 1);
+        }
 
-    private boolean isInputEmpty(String input) {
-        return input.length() == 0;
+        private void parseDelimiter() {
+            delimiter = "";
+            addDelimiters();
+            delimiter = StringUtils.chop(delimiter);
+        }
+
+        private void addDelimiters() {
+            int startIndexDelimiter = 0;
+            while (true) {
+                startIndexDelimiter = input.indexOf("[", startIndexDelimiter) + 1;
+                if (startIndexDelimiter == 0) {
+                    break;
+                }
+                int endIndexDelimiter = input.indexOf("]", startIndexDelimiter);
+                delimiter += input.substring(startIndexDelimiter, endIndexDelimiter) + "|";
+            }
+        }
+
+        private String[] splitInputByDelimiter() {
+            return numbersWithDelimiters.split(delimiter);
+        }
+
+        private int calculateSum(String[] inputSplittedByDelimiter) {
+            int result = 0;
+            for (String token : inputSplittedByDelimiter) {
+                result += addSingleToken(token);
+            }
+            throwExceptionIfNegativeTokensExist();
+            return result;
+        }
+
+        private void throwExceptionIfNegativeTokensExist() {
+            if (hasNegativeTokens()) {
+                throw new IllegalArgumentException(String.format("negatives not allowed (%s)", StringUtils.join(negativeTokens, ",")));
+            }
+        }
+
+        private boolean hasNegativeTokens() {
+            return negativeTokens.size() > 0;
+        }
+
+        private int addSingleToken(String token) {
+            Integer valueAsInteger = Integer.parseInt(token);
+            if (isNegative(valueAsInteger)) {
+                negativeTokens.add(token);
+            } else if (isInValidRange(valueAsInteger)) {
+                return valueAsInteger;
+            }
+            return 0;
+        }
+
+        private boolean isNegative(Integer valueAsInteger) {
+            return valueAsInteger < 0;
+        }
+
+        private boolean isInValidRange(Integer valueAsInteger) {
+            return valueAsInteger < 1000;
+        }
     }
 }

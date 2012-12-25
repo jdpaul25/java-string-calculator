@@ -11,42 +11,47 @@ import static org.junit.Assert.fail;
  */
 public class StringCalculatorTest {
     @Test
-    public void calculateEmptyResult() throws Exception {
+    public void calculateEmptyResult() {
         Assert.assertEquals(0, StringCalculator.add(""));
     }
 
     @Test
-    public void calculateSingleNumber() throws Exception {
+    public void calculateSingleNumber() {
         Assert.assertEquals(1, StringCalculator.add("1"));
     }
 
     @Test
-    public void calculateTwo_expectTwo() throws Exception {
+    public void calculateTwo_expectTwo() {
         Assert.assertEquals(2, StringCalculator.add("2"));
     }
 
     @Test
-    public void calculateTwoToOne_expectThree() throws Exception {
+    public void calculateTwoToOne_expectThree() {
         Assert.assertEquals(3, StringCalculator.add("2,1"));
     }
 
     @Test
-    public void calculateTwoToOneWithNewlines_expectThree() throws Exception {
+    public void calculateTwoToOneWithNewlines_expectThree() {
         Assert.assertEquals(3, StringCalculator.add("2\n1"));
     }
 
     @Test
-    public void calculateTwoToOneWithCustomDelimiter_expectThree() throws Exception {
+    public void calculateTwoToOneWithCustomDelimiter_expectThree() {
         Assert.assertEquals(3, StringCalculator.add("//[x]\n2x1"));
     }
 
     @Test
-    public void calculateTwoToOneWithCustomDelimiterWithLengthTwo_expectThree() throws Exception {
+    public void calculateTwoToOneWithCustomDelimiterWithLengthTwo_expectThree() {
         Assert.assertEquals(3, StringCalculator.add("//[xx]\n2xx1"));
     }
 
     @Test
-    public void calculateSingleNegativeValue_exception() throws Exception {
+    public void calculateTwoToOneToThreeWithTwoCustomDelimiter_expectThree() {
+        Assert.assertEquals(6, StringCalculator.add("//[x][y]\n2x1y3"));
+    }
+
+    @Test
+    public void calculateSingleNegativeValue_exception() {
         try {
             StringCalculator.add("-1");
             fail();
@@ -56,7 +61,7 @@ public class StringCalculatorTest {
     }
 
     @Test
-    public void calculateTwoNegativeValue_exception() throws Exception {
+    public void calculateTwoNegativeValue_exception() {
         try {
             StringCalculator.add("-1,-2");
             fail();
@@ -66,9 +71,7 @@ public class StringCalculatorTest {
     }
 
     @Test
-    public void calculateTwoToOneThousandOne_Two() throws Exception {
+    public void calculateTwoToOneThousandOne_Two() {
         Assert.assertEquals(2, StringCalculator.add("2,1001"));
     }
-
-
 }
