@@ -37,7 +37,12 @@ public class StringCalculatorTest {
 
     @Test
     public void calculateTwoToOneWithCustomDelimiter_expectThree() throws Exception {
-        Assert.assertEquals(3, StringCalculator.add("//x\n2x1"));
+        Assert.assertEquals(3, StringCalculator.add("//[x]\n2x1"));
+    }
+
+    @Test
+    public void calculateTwoToOneWithCustomDelimiterWithLengthTwo_expectThree() throws Exception {
+        Assert.assertEquals(3, StringCalculator.add("//[xx]\n2xx1"));
     }
 
     @Test

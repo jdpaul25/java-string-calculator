@@ -47,7 +47,9 @@ public class StringCalculator {
     }
 
     private void parseDelimiter(String input) {
-        delimiter = String.valueOf(input.charAt(2));
+        int startIndexDelimiter = input.indexOf("[") + 1;
+        int endIndexDelimiter = input.indexOf("]");
+        delimiter = input.substring(startIndexDelimiter, endIndexDelimiter);
     }
 
     private boolean hasCustomDelimiter(String input) {
