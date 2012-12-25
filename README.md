@@ -1,0 +1,1 @@
+Kata based on http://osherove.com/tdd-kata-1/
