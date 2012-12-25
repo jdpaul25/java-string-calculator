@@ -1,5 +1,10 @@
 package calc;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Klaus Bayrhammer
  */
@@ -40,8 +45,17 @@ public class StringCalculator {
 
     private int calculateSum(String[] inputSplittedByDelimitor) {
         int result = 0;
+        List<String> negativeTokens = new ArrayList<String>();
+
         for (String token : inputSplittedByDelimitor) {
-            result += Integer.parseInt(token);
+            Integer valueAsInteger = Integer.parseInt(token);
+            if (valueAsInteger < 0) {
+                negativeTokens.add(token);
+            }
+            result += valueAsInteger;
+        }
+        if (negativeTokens.size() > 0) {
+            throw new IllegalArgumentException(String.format("negatives not allowed (%s)", StringUtils.join(negativeTokens, ",")));
         }
         return result;
     }
