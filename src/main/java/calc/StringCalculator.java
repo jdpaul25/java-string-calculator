@@ -5,9 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Klaus Bayrhammer
- */
+
 public class StringCalculator {
 
     public static int add(String input) {
@@ -36,6 +34,8 @@ public class StringCalculator {
         }
 
         private boolean isInputEmpty() {
+        	if(null==input)
+        		return true;
             return input.length() == 0;
         }
 
@@ -114,7 +114,7 @@ public class StringCalculator {
         }
 
         private boolean isInValidRange(Integer valueAsInteger) {
-            return valueAsInteger < 1000;
+            return valueAsInteger < 100;
         }
     }
 }
