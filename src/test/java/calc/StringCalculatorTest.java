@@ -6,15 +6,34 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-/**
- * @author Klaus Bayrhammer
- */
+
 public class StringCalculatorTest {
     @Test
     public void calculateEmptyResult() {
         Assert.assertEquals(0, StringCalculator.add(""));
     }
+    
+    @Test
+    public void calculateNullResult() {
+        Assert.assertEquals(0, StringCalculator.add(null));
+    }
+    
+    @Test
+    public void calculateZero_NullResult() {
+        Assert.assertEquals(0, StringCalculator.add("0,"));
+    }
 
+    @Test
+    public void calculateTwo_NullResult() {
+        Assert.assertEquals(2, StringCalculator.add("2,"));
+    }
+    
+    @Test
+    public void calculateMultiple_NullResult() {
+        Assert.assertEquals(5, StringCalculator.add("0,5,"));
+    }
+
+    
     @Test
     public void calculateSingleNumber() {
         Assert.assertEquals(1, StringCalculator.add("1"));
@@ -29,7 +48,7 @@ public class StringCalculatorTest {
     public void calculateTwoToOne_expectThree() {
         Assert.assertEquals(3, StringCalculator.add("2,1"));
     }
-
+    
     @Test
     public void calculateTwoToOneWithNewlines_expectThree() {
         Assert.assertEquals(3, StringCalculator.add("2\n1"));
@@ -71,7 +90,7 @@ public class StringCalculatorTest {
     }
 
     @Test
-    public void calculateTwoToOneThousandOne_Two() {
-        Assert.assertEquals(2, StringCalculator.add("2,1001"));
+    public void calculateTwoToOneHundredOne_Two() {
+        Assert.assertEquals(2, StringCalculator.add("2,101"));
     }
 }
